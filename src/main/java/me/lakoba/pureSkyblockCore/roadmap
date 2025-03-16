@@ -1,0 +1,21 @@
+MAIN
+    - IslandManager
+        - Create Island and small islands
+            - Schematic loader
+        - Island permission manager
+            - Roles on island
+        - Island invitation manager
+            - Invite to island group
+            - Invite other players to join their island
+            - Request to join island
+        - Island expansion
+            - Expand island by purchasing islands levels
+    - Database manager
+        - Insert data to MYSQL
+        - Read data from MYSQL
+    - Island Region checker
+        - Blocking actions outside of the island area
+    - Island commands
+        - Handling is commands
+    - Island gui manager
+        - Enabling and disabling visits and other stuff

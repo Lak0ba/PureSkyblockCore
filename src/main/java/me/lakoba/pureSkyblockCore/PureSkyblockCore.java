@@ -1,47 +1,56 @@
 package me.lakoba.pureSkyblockCore;
 
 import me.lakoba.pureSkyblockCore.command.IslandCommand;
-import me.lakoba.pureSkyblockCore.listeners.ProtectionListener;
-import me.lakoba.pureSkyblockCore.managers.DatabaseManager;
-import me.lakoba.pureSkyblockCore.managers.IslandManager;
+import me.lakoba.pureSkyblockCore.managers.*;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
 
 public final class PureSkyblockCore extends JavaPlugin {
 
-    private static PureSkyblockCore instance;
-    private DatabaseManager databaseManager;
     private IslandManager islandManager;
+    private IslandCommand commandManager;
+    private InvitationManager invitationManager;
+    private ExpansionManager expansionManager;
 
+    File playerDataFile = new File(this.getDataFolder(), "players.yml");
+    YamlConfiguration playerDataConfig = YamlConfiguration.loadConfiguration(playerDataFile);
+
+    File dataFile = new File(this.getDataFolder(), "islands.yml");
+    YamlConfiguration dataConfig = YamlConfiguration.loadConfiguration(dataFile);
 
     @Override
     public void onEnable() {
-        instance = this;
-        saveDefaultConfig();
+        saveDefaultConfig(); // Načtení konfigurace
 
-        databaseManager = new DatabaseManager();
-        islandManager = new IslandManager(this);
+        this.islandManager = new IslandManager(this);
+        this.invitationManager = new InvitationManager();
+        this.expansionManager = new ExpansionManager(this);
+        this.commandManager = new IslandCommand( islandManager, invitationManager, expansionManager);
 
-        getServer().getPluginManager().registerEvents(new ProtectionListener(), this);
-        getCommand("is").setExecutor(new IslandCommand(islandManager));
+        getServer().getPluginManager().registerEvents(new me.lakoba.pureSkyblockCore.listeners.ProtectionListener(this), this);
 
-        getLogger().info("SkyblockCore byl úspěšně spuštěn!");
+        getCommand("is").setExecutor(commandManager);
+
+        getLogger().info("Skyblock plugin byl úspěšně zapnut!");
     }
 
     @Override
     public void onDisable() {
-        databaseManager.close();
-        getLogger().info("SkyblockCore byl vypnut.");
+        getLogger().info("Skyblock plugin byl úspěšně vypnut!");
     }
 
-    public static PureSkyblockCore getInstance() {
-        return instance;
+    public void reloadData() {
+        playerDataConfig = YamlConfiguration.loadConfiguration(playerDataFile);
+        dataConfig = YamlConfiguration.loadConfiguration(dataFile);
     }
 
-    public DatabaseManager getDatabaseManager() {
-        return databaseManager;
+    public YamlConfiguration getDataFile() {
+        return dataConfig;
     }
 
-    public IslandManager getIslandManager() {
-        return islandManager;
+    public YamlConfiguration getPlayerDataFile() {
+        return playerDataConfig;
     }
 }

@@ -1,5 +1,11 @@
-mysql:
+database:
   host: "localhost"
-  database: "skyblock"
-  user: "username"
+  port: 3306
+  user: "root"
   password: "password"
+  database: "skyblock"
+
+island:
+  startingSize: 50
+  expansionCost: 32 # Počet bloků pro expanzi
+  expansionPrice: 10 # Cena za expanzi
