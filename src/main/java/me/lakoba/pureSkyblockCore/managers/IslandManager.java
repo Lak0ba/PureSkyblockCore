@@ -23,19 +23,19 @@ public class IslandManager {
         this.schematicLoader = new SchematicLoader();
     }
 
-    public void createIsland(Player player) {
-        World world = generateFlatOceanWorld(player.getName());
-        Location center = new Location(world, 0, 67, 0);
+        public void createIsland(Player player) {
+            World world = generateFlatOceanWorld(player.getName());
+            Location center = new Location(world, 0, 67, 0);
 
-        schematicLoader.loadSchematic("main_island");
-        schematicLoader.pasteSchematic(center);
+            schematicLoader.loadSchematic("main_island");
+            schematicLoader.pasteSchematic(center);
 
-        generateRandomIslands(world);
+            generateRandomIslands(world);
 
-        player.teleport(center);
-        player.sendMessage("§aVáš ostrov byl vytvořen!");
-        saveIslandData(player.getName());
-    }
+            player.teleport(center);
+            player.sendMessage("§aVáš ostrov byl vytvořen!");
+            saveIslandData(player.getName());
+        }
 
     private World generateFlatOceanWorld(String worldName) {
         WorldCreator wc = new WorldCreator(worldName);
@@ -44,9 +44,8 @@ public class IslandManager {
             @Override
             public ChunkData generateChunkData(World world, Random random, int x, int z, BiomeGrid biome) {
                 ChunkGenerator.ChunkData chunkData = createChunkData(world);
-                for (int i = 0; i < 64; i++) {
-                    chunkData.setRegion(0, i, 0, 16, i + 1, 16, Material.WATER);
-                }
+                chunkData.setRegion(0, 0, 0, 16, 64, 16, Material.WATER);
+
                 return chunkData;
             }
         });
